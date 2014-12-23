@@ -2,7 +2,7 @@ library(shiny)
 # 定义带菜单栏的用户界面
 shinyUI(navbarPage("R小站",
   #菜单栏开始-----
-  #首页
+  #首页----
   tabPanel("首页",
      fluidPage(
        fluidRow(
