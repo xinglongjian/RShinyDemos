@@ -97,7 +97,7 @@ shinyServer(function(input,output,session) {
       add_tooltip(movie_tooltip,"hover") %>%  
       add_axis("x",title=xvar_name) %>%
       add_axis("y",title=yvar_name) %>%
-      add_legend("stroke",title="赢得奥斯卡",values=c("Yes","No")) %>%
+      add_legend("stroke",title="Won Oscars",values=c("Yes","No")) %>%
       scale_nominal("stroke",domain=c("Yes","No"),range=c("orange","#aaa")) %>%
       set_options(width=500,height=500)
       
