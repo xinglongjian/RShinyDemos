@@ -2,6 +2,8 @@ library(shiny)
 library(ggplot2)
 library(ggvis)
 
+library(datasets)
+
 dataset <- diamonds
 
 
@@ -86,16 +88,46 @@ shinyUI(navbarPage("R小站",
                        )
                       ),
                   column(9,
-                      plotOutput('ke_plot')
+                      plotOutput('ke_plot'),
+                      wellPanel(
+                        h3("K-means聚类算法:"),
+                        p("K-means算法接受参数k，然后将事先输入的n个数据对象划分为k个聚类以便使得所获得的聚类满足：同一聚类中的对象相似度高，而不同聚类中的对象相似度低。
+                          聚类相似度是利用各聚类中对象的均值所获得一个中心对象来进行计算的。"),
+                        p("K-means算法是最为经典的基于划分的聚类算法，是十大经典数据挖掘算法之一。K-means算法的基本思想是：以空间中k个点为中心进行聚类，对最靠近他们的对象归类。
+                          通过迭代的方法，逐次更新各聚类中心的值，直到得到最好的聚类结果。")
                       )
-                  )    
+                  ))   
             ),
-#             tabPanel("Telephones by region",h3("This is the first panel")
-#             ),
+            tabPanel("Telephones by region",
+                fluidRow(
+                  column(3,
+                    wellPanel(
+                      selectInput("region","区域:",choices=colnames(WorldPhones)),
+                      hr(),
+                      helpText("来源于AT&T(1961)全世界的电话数据.")
+                      )),
+                  column(9,
+                      plotOutput("phonePlot")
+                    )
+                  )
+            ),
 #             tabPanel("Faithful",h3("This is the first panel")
 #             ),
-#             tabPanel("Word cloud",h3("This is the first panel")
-#             ),
+            tabPanel("Word cloud",
+                fluidRow(
+                  column(3,wellPanel(
+                    selectInput("bookselects","选择一本书:",choices=books),
+                    actionButton("bookupdate","更新"),
+                    hr(),
+                    sliderInput("wordfreq","频率最小值",min=1,max=50,value=15),
+                    sliderInput("wordnums","单词最大数",min=1,max=300,value=100)
+                    )),
+                  column(9,
+                    plotOutput("wordcloudplot")  
+                    )
+                  
+                  )
+            ),
 #             tabPanel("Single-file shiny app",h3("This is the first panel")
 #             ),
             widths = c(3, 9))

@@ -2,6 +2,10 @@ library(ggplot2)
 library(ggvis)
 library(dplyr)
 library(RSQLite)
+
+library(datasets)
+
+source("./Rfun/wordcloud/wcfun.R",encoding="utf-8")
 #library(RSQLite.extfuns)
 #在app启动时处理数据集----
 ##movie explorer data----
@@ -97,7 +101,7 @@ shinyServer(function(input,output,session) {
       add_tooltip(movie_tooltip,"hover") %>%  
       add_axis("x",title=xvar_name) %>%
       add_axis("y",title=yvar_name) %>%
-      add_legend("stroke",title="Won Oscars",values=c("Yes","No")) %>%
+      add_legend("stroke",title="Win Oscars",values=c("Yes","No")) %>%
       scale_nominal("stroke",domain=c("Yes","No"),range=c("orange","#aaa")) %>%
       set_options(width=500,height=500)
       
@@ -120,5 +124,35 @@ shinyServer(function(input,output,session) {
     points(clusters()$centers,pch=4,cex=4,lwd=4)
   })
   #KMeans Example end----
+  
+  #Telephones by region Start----
+  output$phonePlot<-renderPlot({
+    barplot(WorldPhones[,input$region],main=input$region,ylab="Numbers of Telephons",xlab="Year")
+  })
+  #Telephones by region End----
+  print("end1")
+  #Word cloud Start----
+  terms<-reactive({
+    #when the update button is press。。。
+    input$bookupdate
+    print("end2")
+    #隔离处理，不能做其他事情
+    isolate({
+      withProgress({
+        #getTermMatrix(input$bookselects)
+      },min=0,max=1,value=0,message="Processing......",session)
+    })
+    
+  })
+  print("end3")
+  wordcloud_rep<-repeatable(wordcloud)
+  
+  output$wordcloudplot<-renderPlot({
+    v<-terms()
+    print("end4")
+    wordcloud_rep(names(v),v,scale=c(4,0.5),min.freq=input$wordfreq,max.words=input$wordnums,colors=brewer.pal(8,"Dark2"))
+  })
+  
+  #Word cloud End----
   
 })

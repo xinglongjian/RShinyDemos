@@ -9,3 +9,6 @@ axis_vars <- c(
 )
 
 irisnames<-c('萼片长度'='Sepal.Length','萼片宽度'='Sepal.Width','花瓣长度'='Petal.Length','花瓣宽度'='Petal.Width')
+
+# The list of valid books wordcloud
+books <<- list("A Mid Summer Night's Dream" = "summer","The Merchant of Venice" = "merchant", "Romeo and Juliet" = "romeo")
