@@ -26,7 +26,7 @@ shinyUI(navbarPage("R小站",
        ),
        br(),
        fluidRow(
-         h3("这是一个神奇的网站!")
+         h3("这里打算放那个天气图http://spark.rstudio.com/ram/WeatherCompare/ https://github.com/Ram-N/WeatherCompare!gmail")
        ))),
   #一级菜单“Shiny”----
   navbarMenu("Shiny例子",
@@ -64,7 +64,9 @@ shinyUI(navbarPage("R小站",
                         ggvisOutput("me_plot"),
                         wellPanel(
                           span("Number of movies selected:"),
-                          textOutput("me_movies")
+                          textOutput("me_movies"),
+                          p("参考：",a("官网Movie explorer例子",href="http://shiny.rstudio.com/gallery/movie-explorer.html"))
+                          
                           )
                   )
                 )
@@ -94,7 +96,8 @@ shinyUI(navbarPage("R小站",
                         p("K-means算法接受参数k，然后将事先输入的n个数据对象划分为k个聚类以便使得所获得的聚类满足：同一聚类中的对象相似度高，而不同聚类中的对象相似度低。
                           聚类相似度是利用各聚类中对象的均值所获得一个中心对象来进行计算的。"),
                         p("K-means算法是最为经典的基于划分的聚类算法，是十大经典数据挖掘算法之一。K-means算法的基本思想是：以空间中k个点为中心进行聚类，对最靠近他们的对象归类。
-                          通过迭代的方法，逐次更新各聚类中心的值，直到得到最好的聚类结果。")
+                          通过迭代的方法，逐次更新各聚类中心的值，直到得到最好的聚类结果。"),
+                        p("参考：",a("官网Kmeans example例子",href="http://shiny.rstudio.com/gallery/kmeans-example.html"))
                       )
                   ))   
             ),
@@ -107,7 +110,10 @@ shinyUI(navbarPage("R小站",
                       helpText("来源于AT&T(1961)全世界的电话数据.")
                       )),
                   column(9,
-                      plotOutput("phonePlot")
+                      plotOutput("phonePlot"),
+                      wellPanel(
+                        p("参考：",a("官网Telephones by region例子",href="http://shiny.rstudio.com/gallery/telephones-by-region.html"))
+                        )
                     )
                   )
             ),
@@ -115,15 +121,18 @@ shinyUI(navbarPage("R小站",
 #             ),
             tabPanel("Word cloud",
                 fluidRow(
-                  column(3,wellPanel(
-                    selectInput("bookselects","选择一本书:",choices=books),
+                  column(4,wellPanel(
+                    selectInput("bookselects","选择一本书",choices=books),
                     actionButton("bookupdate","更新"),
                     hr(),
-                    sliderInput("wordfreq","频率最小值",min=1,max=50,value=15),
-                    sliderInput("wordnums","单词最大数",min=1,max=300,value=100)
+                    sliderInput("wordfreq","频率最小值：",min=1,max=50,value=15),
+                    sliderInput("wordnums","单词最大数", min=1,max=300,value=100)
                     )),
-                  column(9,
-                    plotOutput("wordcloudplot")  
+                  column(8,
+                    plotOutput("wordcloudplot"),
+                    wellPanel(
+                      p("参考：",a("官网Word cloud例子",href="http://shiny.rstudio.com/gallery/word-cloud.html",target="blank"))
+                    )
                     )
                   
                   )

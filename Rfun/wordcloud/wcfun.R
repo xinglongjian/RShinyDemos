@@ -10,16 +10,13 @@ getTermMatrix<-memoise(function(book){
   
   if(!(book %in% books))
      stop("Unknown book")
-  print('afdasdfasdfasd')
   text<-readLines(sprintf("./data/wordcloud/%s.txt.gz",book),encoding="UTF-8")
-  print('af')
   #构建语料库
   myCorpus=Corpus(VectorSource(text))
   #全部转为小写
   myCorpus=tm_map(myCorpus,content_transformer(FUN=tolower)) 
   #去掉标点符号
   myCorpus=tm_map(myCorpus,removePunctuation)
-  print('af333')
   #去掉数字
   myCorpus=tm_map(myCorpus,removeNumbers)
   #去掉一些常用词

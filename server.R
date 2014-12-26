@@ -130,26 +130,22 @@ shinyServer(function(input,output,session) {
     barplot(WorldPhones[,input$region],main=input$region,ylab="Numbers of Telephons",xlab="Year")
   })
   #Telephones by region End----
-  print("end1")
   #Word cloud Start----
   terms<-reactive({
     #when the update button is press。。。
     input$bookupdate
-    print("end2")
     #隔离处理，不能做其他事情
     isolate({
       withProgress({
-        #getTermMatrix(input$bookselects)
-      },min=0,max=1,value=0,message="Processing......",session)
+        getTermMatrix(input$bookselects)
+      },min=0,max=1,value=0,message="Processing......")
     })
     
   })
-  print("end3")
   wordcloud_rep<-repeatable(wordcloud)
   
   output$wordcloudplot<-renderPlot({
     v<-terms()
-    print("end4")
     wordcloud_rep(names(v),v,scale=c(4,0.5),min.freq=input$wordfreq,max.words=input$wordnums,colors=brewer.pal(8,"Dark2"))
   })
   
