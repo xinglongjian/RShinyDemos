@@ -79,9 +79,9 @@ shinyServer(function(input,output,session) {
     df<-city.df()
     #extract the month as new column in df
     df$Month<-months(as.Date(df$Date))
-    df$MonthNum<-as.numeric(format(as.Date(df$Date),"%m"))
+    #df$MonthNum<-as.numeric(format(as.Date(df$Date),"%m"))
     #ddply:for each subset of a data.frame,combine results into a data.frame
-    monthly.df<-ddply(df,.(City,Month,MonthNum),plyr::summarise,
+    monthly.df<-ddply(df,.(City,Month),plyr::summarise,
                       meanT=round(mean(Temperature),1),
                       maxT=round(max(Temperature),0),
                       minT=round(min(Temperature),0))
@@ -94,7 +94,9 @@ shinyServer(function(input,output,session) {
     #attach these two columns to the monthly.df
     monthly.df$MeanDmax<-city.temp.mean.of.Max.and.Min$MeanDMax
     monthly.df$MeanDmin<-city.temp.mean.of.Max.and.Min$MeanDMin
-    monthly.df<-monthly.df %>% plyr::arrange(MonthNum)
+    #monthly.df<-monthly.df %>% plyr::arrange(MonthNum)
+    
+    monthly.df<-within(monthly.df,Month<-factor(Month,levels=month.name))
     return(monthly.df)
   })
   output$WikiChart<-renderPlot({
