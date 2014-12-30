@@ -3,9 +3,7 @@ library(ggplot2)
 library(ggvis)
 
 library(datasets)
-
 dataset <- diamonds
-
 
 # 定义带菜单栏的用户界面
 shinyUI(navbarPage("R小站",
@@ -14,8 +12,9 @@ shinyUI(navbarPage("R小站",
   #
   tabPanel("首页",
      fluidPage(
+       #addResourcePath("./www/js/index.js"),
        fluidRow(
-         column(6, offset = 3,
+         column(10, offset = 1,
             p("该R小站以shiny框架为基础搭建,主要包含于R相关的技术总结和应用实例。通过web方式与大家共享，希望多多交流，共同进步！
               作者:xinglongjian,
               github:https://github.com/xinglongjian,
@@ -26,8 +25,74 @@ shinyUI(navbarPage("R小站",
        ),
        br(),
        fluidRow(
-         h3("这里打算放那个天气图http://spark.rstudio.com/ram/WeatherCompare/ https://github.com/Ram-N/WeatherCompare!gmail")
-       ))),
+         column(4,
+           wellPanel(
+              withTags(
+                div(
+                  h4("US Cities"),
+                  div( class="row-fluid",
+                       div( class="span5","Atlanta, GA"),            
+                       div(class='span3',checkboxInput(inputId = "atl12",label = "2012",value=TRUE)),
+                       div(class='span3',checkboxInput(inputId = "atl13",label = "2013", value=FALSE))),
+                  div( class="row-fluid",
+                       div( class="span5","Austin, TX"),            
+                       div(class='span3',checkboxInput(inputId = "aus12",label = "2012",value=FALSE)),
+                       div(class='span3',checkboxInput(inputId = "aus13",label = "2013",value=FALSE))),
+                  div( class="row-fluid",
+                       div( class="span5","Honolulu, HI"),            
+                       div(class='span3',checkboxInput(inputId = "hnl12",label = "2012",value=FALSE)),
+                       div(class='span3',checkboxInput(inputId = "hnl13",label = "2013",value=FALSE))),
+                  div( class="row-fluid",
+                       div( class="span5","Los Angeles, CA"),            
+                       div(class='span3',checkboxInput(inputId = "lax12",label = "2012",value=FALSE)),
+                       div(class='span3',checkboxInput(inputId = "lax13",label = "2013",value=FALSE))),
+                  div( class="row-fluid",
+                       div( class="span5","Miami, FL"),            
+                       div(class='span3',checkboxInput(inputId = "mia12",label = "2012",value=FALSE)),
+                       div(class='span3',checkboxInput(inputId = "mia13",label = "2013",value=FALSE)))
+                )
+           ))
+         ),
+         column(4,
+                wellPanel(
+                  withTags(
+                    div(
+                      h4("Outside the US"),
+                      div( class="row-fluid",
+                           div( class="span5","London, UK"),            
+                           div(class='span3', checkboxInput(inputId = "lhr12", label = "2012", value=FALSE)),
+                           div(class='span3', checkboxInput(inputId = "lhr13", label = "2013", value=FALSE))),
+                      div( class="row-fluid",
+                           div( class="span5", "Sydney, AUS"),            
+                           div(class='span3', checkboxInput(inputId = "syd12", label = "2012", value=FALSE)),
+                           div(class='span3', checkboxInput(inputId = "syd13", label = "2013", value=FALSE))),
+                      div( class="row-fluid",
+                           div( class="span5", "Brisbane, AUS"),            
+                           div(class='span3', checkboxInput(inputId = "bne12", label = "2012", value=FALSE)),
+                           div(class='span3', checkboxInput(inputId = "bne13", label = "2013", value=FALSE))),
+                      div( class="row-fluid",
+                           div( class="span5", "Singapore, SIN"),            
+                           div(class='span3', checkboxInput(inputId = "sin12", label = "2012", value=FALSE)),
+                           div(class='span3', checkboxInput(inputId = "sin13", label = "2013", value=FALSE))),
+                      div( class="row-fluid",
+                           div( class="span5", "Mumbai, IND"),            
+                           div(class='span3', checkboxInput(inputId = "bom12", label = "2012", value=FALSE)),
+                           div(class='span3', checkboxInput(inputId = "bom13", label = "2013", value=FALSE)))
+                    )
+                  )
+            )
+         ),
+         column(4,
+            p("参考：",a("WeatherCompare", href="https://github.com/Ram-N/WeatherCompare"))
+       )),
+       fluidRow(
+         tabsetPanel(id ="graphtabs",
+              tabPanel("Wiki-Style Char", 
+                  plotOutput(outputId="WikiChart", width = "100%", height = "800px")       
+              )
+        )
+       )
+       )),
   #一级菜单“Shiny”----
   navbarMenu("Shiny例子",
       #"Shiny例子"-"Interactive visualizations" ---- 

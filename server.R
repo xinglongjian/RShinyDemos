@@ -1,12 +1,13 @@
 library(ggplot2)
 library(ggvis)
+library(plyr)
 library(dplyr)
 library(RSQLite)
 
 library(datasets)
 
 source("./Rfun/wordcloud/wcfun.R",encoding="utf-8")
-#library(RSQLite.extfuns)
+source("./Rfun/weather/weather.R",encoding="utf-8")
 #在app启动时处理数据集----
 ##movie explorer data----
 db<-src_sqlite("data/movies.db")
@@ -28,7 +29,92 @@ palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
 # 定义服务器逻辑----
 shinyServer(function(input,output,session) {
   
+  #index----
+  city.compare.list<-reactive({
+    c1<-NULL
+    #2012
+    if(input$atl12 ==1) {c1<-c(c1,4)}
+    if(input$aus12 ==1) {c1<-c(c1,6)}
+    if(input$hnl12 ==1) {c1<-c(c1,13)}
+    if(input$lax12 ==1) {c1<-c(c1,23)}
+    if(input$mia12 ==1) {c1<-c(c1,26)}
+    if(input$lhr12 ==1) {c1<-c(c1,21)}
+    if(input$syd12 ==1) {c1<-c(c1,38)}
+    if(input$bne12 ==1) {c1<-c(c1,9)}
+    if(input$sin12 ==1) {c1<-c(c1,36)}
+    if(input$bom12 ==1) {c1<-c(c1,29)}
+    #2013
+    if(input$atl13 ==1) {c1<-c(c1,5)}
+    if(input$aus13 ==1) {c1<-c(c1,7)}
+    if(input$hnl13 ==1) {c1<-c(c1,14)}
+    if(input$lax13 ==1) {c1<-c(c1,24)}
+    if(input$mia13 ==1) {c1<-c(c1,27)}
+    if(input$lhr13 ==1) {c1<-c(c1,22)}
+    if(input$syd13 ==1) {c1<-c(c1,39)}
+    if(input$bne13 ==1) {c1<-c(c1,10)}
+    if(input$sin13 ==1) {c1<-c(c1,37)}
+    if(input$bom13 ==1) {c1<-c(c1,30)}
+    
+    city.compare.list<-cities[c1]
+  })
+  
+  num.cities<-reactive({
+    length(city.compare.list())
+  })
+  
+  xfontsize<-reactive({
+    n<-num.cities()
+    if(n<=5) {fnt=20}
+    if((n>5)&(n<=9)) {fnt=15}
+    if(n>=10){fnt=10}
+    return(fnt)
+  })
+  #subset of cities
+  city.df<-reactive({
+    subset(city.temp.df,City %in% city.compare.list())
+  })
+  #summarize the data into Monthlies,1row =1month for 1city
+  summarized.df<-reactive({
+    
+    df<-city.df()
+    #extract the month as new column in df
+    df$Month<-months(as.Date(df$Date))
+    df$MonthNum<-as.numeric(format(as.Date(df$Date),"%m"))
+    #ddply:for each subset of a data.frame,combine results into a data.frame
+    monthly.df<-ddply(df,.(City,Month,MonthNum),plyr::summarise,
+                      meanT=round(mean(Temperature),1),
+                      maxT=round(max(Temperature),0),
+                      minT=round(min(Temperature),0))
+    daily.max.min<-ddply(df,.(City,Month,Date),plyr::summarise,
+                         Dmax=max(Temperature),
+                         Dmin=min(Temperature))
+    city.temp.mean.of.Max.and.Min<-ddply(daily.max.min,.(City,Month),plyr::summarise,
+                                         MeanDMax=round(mean(Dmax),1),
+                                         MeanDMin=round(mean(Dmin),1))
+    #attach these two columns to the monthly.df
+    monthly.df$MeanDmax<-city.temp.mean.of.Max.and.Min$MeanDMax
+    monthly.df$MeanDmin<-city.temp.mean.of.Max.and.Min$MeanDMin
+    monthly.df<-monthly.df %>% plyr::arrange(MonthNum)
+    return(monthly.df)
+  })
+  output$WikiChart<-renderPlot({
+    smalldf<-summarized.df()
+    p<-ggplot(data=smalldf,aes(x=Month,
+                               y=meanT,
+                               ymin=minT,
+                               ymax=maxT))
+    p<-p+geom_crossbar(width=0.2,fill="red")
+    p<-p+geom_text(data=smalldf,aes(y=maxT+5,label=maxT),color="red")
+    p<-p+geom_text(data=smalldf,aes(y=minT-5,label=minT),color="blue")
+    p<-p+facet_grid(City ~ .)
+    
+    p<-p+xlab("Month 2012")+ylab("")
+    p<-p+labs(title="City Mean, Max & Min Temperatures, by Month")
+    print(p)
+  })
+  
   #Movie explorer start----
+  tryCatch(
   movies<-reactive({
     reviews<-input$reviews
     oscars<-input$oscars
@@ -36,7 +122,6 @@ shinyServer(function(input,output,session) {
     maxyear<-input$year[2]
     minboxoffice<-input$boxoffice[1]*1e6
     maxboxoffice<-input$boxoffice[2]*1e6
-    
     #应用过滤
     m<-all_movies %>% filter(
       Reviews>=reviews,
@@ -45,12 +130,13 @@ shinyServer(function(input,output,session) {
       Year<=maxyear,
       BoxOffice>=minboxoffice,
       BoxOffice<=maxboxoffice
-      ) %>% arrange(Oscars)
+      ) %>% dplyr::arrange(Oscars)
     #通过人过滤(可选)
     if(input$genre!="All"){
      genre<-paste0("%",input$genre,"%")
      m<-m %>% filter(Genre %like% genre)
     }
+    
     #通过导演过滤(可选)
     if(!is.null(input$director)&&input$director !=""){
      director<-paste0("%",input$director,"%")
@@ -61,7 +147,6 @@ shinyServer(function(input,output,session) {
      cast<-paste0("%",input$cast,"%")
      m<-m %>% filter(Cast %like% cast)
     }
-    
     m<-as.data.frame(m)
     #添加一列来标识该电影是否赢得了奥斯卡
     m$has_oscar<-character(nrow(m))
@@ -70,22 +155,15 @@ shinyServer(function(input,output,session) {
     
     m
     
-  })
-  
-  #生成提示信息的函数
-  movie_tooltip<-function(x){
-    if(is.null(x)) return(NULL)
-    if(is.null(x$ID)) return(NULL)
-    
-    #通过ID获取电影信息
-    all_movies<-isolate(movies())
-    movie<-all_movies[all_movies$ID == x$ID,]
-    
-    paste0("<b>",movie$Title,"</b><br/>",movie$Year,"<br/>",
-           "$",format(movie$BoxOffice,big.mark=",",scientific=))
-  }
+  }),
+  error = function(e){
+    print("movies error.")
+    print(e)
+    }
+  )
   
   #带有ggvis图的rective表达式
+  tryCatch(
   vis<-reactive({
     #坐标表名称
     xvar_name<-names(axis_vars)[axis_vars == input$xvar]
@@ -105,10 +183,14 @@ shinyServer(function(input,output,session) {
       scale_nominal("stroke",domain=c("Yes","No"),range=c("orange","#aaa")) %>%
       set_options(width=500,height=500)
       
+  }),error=function(e){
+    print(e)
   })
   
-  vis %>% bind_shiny("me_plot")
-  output$me_movies<-renderText({nrow(movies())})
+   vis %>% bind_shiny("me_plot")
+   output$me_movies<-renderText({nrow(movies())})
+  
+  
   #Movie explorer end----
   
   #KMeans Example start----
