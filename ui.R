@@ -182,8 +182,6 @@ shinyUI(navbarPage("R小站",
                     )
                   )
             ),
-#             tabPanel("Faithful",h3("This is the first panel")
-#             ),
             tabPanel("Word cloud",
                 fluidRow(
                   column(4,wellPanel(
@@ -202,48 +200,39 @@ shinyUI(navbarPage("R小站",
                   
                   )
             ),
-#             tabPanel("Single-file shiny app",h3("This is the first panel")
+#             tabPanel("Single-file shiny app",
+#                      h3("This is the first panel")
 #             ),
             widths = c(3, 9))
-      )
+      ),
       #"Shiny例子"-"Widgets" ----
-#       tabPanel("Widgets",
-#           navlistPanel(
-#             "header",
-#             tabPanel("Widget Gallery",h3("This is the first panel")
-#             ),
-#             tabPanel("Sliders",h3("This is the first panel")
-#             ),
-#             tabPanel("Widgets",h3("This is the first panel")
-#             ),
-#             tabPanel("Basic DataTable",h3("This is the first panel")
-#             ),
-#             tabPanel("DataTables Demo",h3("This is the first panel")
-#             ),
-#             tabPanel("DataTables Options",h3("This is the first panel")
-#             ),
+      tabPanel("Widgets",
+          navlistPanel(
+            "header",
+            tabPanel("basic-datatable",
+                fluidRow(
+                  column(4,
+                      selectInput("man","制造商:",c("All",unique(as.character(mpg$manufacturer))))
+                      ),
+                  column(4,
+                      selectInput("trans","传输方式:",c("All",unique(as.character(mpg$trans))))
+                      ),
+                  column(4,
+                      selectInput("cyl","气缸数：",c("All",unique(as.character(mpg$cyl))))
+                      )
+                  ),
+                fluidRow(
+                  dataTableOutput(outputId="basictable")
+                )
+            ),
 #             tabPanel("Date and date range",h3("This is the first panel")
-#             ),
-#             tabPanel("Dynamic Clustering",h3("This is the first panel")
-#             ),
-#             tabPanel("File Upload",h3("This is the first panel")
-#             ),
-#             tabPanel("File Download",h3("This is the first panel")
-#             ),
-#             tabPanel("Selectize Examples",h3("This is the first panel")
-#             ),
-#             tabPanel("Selectize vs. Select",h3("This is the first panel")
-#             ),
-#             tabPanel("Option groups for selectize input",h3("This is the first panel")
-#             ),
-#             tabPanel("Custom input bindings",h3("This is the first panel")
 #             ),
 #             tabPanel("Custom input control",h3("This is the first panel")
 #             ),
 #             tabPanel("MathJax",h3("This is the first panel")
 #             ),
-#             widths = c(3, 9))
-#       ),
+            widths = c(3, 9))
+      )
       #"Shiny例子"-"Application layout" ----
 #       tabPanel("Application layout",
 #           navlistPanel(

@@ -235,4 +235,30 @@ shinyServer(function(input,output,session) {
   
   #Word cloud End----
   
+  #Basic table start----
+  output$basictable<-renderDataTable({
+    data<-mpg
+    if(input$man!="All"){
+      data<-data[data$manufacturer==input$man,]
+    }
+    if(input$cyl!="All"){
+      data<-data[data$cyl==input$cyl,]
+    }
+    if(input$trans!="All"){
+      data<-data[data$trans==input$trans,]
+    }
+    data
+  },options = list(
+    searching  = FALSE,
+    language=list(
+      emptyTable="表中数据为空",
+      lengthMenu="显示 _MENU_ 结果",
+      loadingRecords="加载......",
+      processing="查询......",
+      infoEmpty="表中数据为空",
+      info="显示第_START_至_END_结果，总共 _TOTAL_ "
+      )
+    
+  ))
+  #Basic table end----
 })
