@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>主要介绍如何使用R进行数据挖掘</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h1>主要介绍如何使用R进行数据挖掘</h1>
+
+<p>这里主要介绍数据挖掘过程和常用的技术，包含聚类、分类和关联规则。也展示了用于数据挖掘的R包以及数据集。每一种技术可以有多种方式实现，我会一一加入进来，尽量描述数据挖掘的整个过程。</p>
+
+<h2>1、数据挖掘的主要技术</h2>
+
+<ul>
+<li>聚类(Clustering)</li>
+<li>分类(Classificating)</li>
+<li>关联规则(Association Rules)</li>
+<li>序列模式(Sequential Patterns)</li>
+<li>时序分析(Time Series Analysis)</li>
+<li>文本挖掘(Text Mining)</li>
+</ul>
+
+<h2>2、数据挖掘用到的包和函数</h2>
+
+<p>下面罗列了一些用于数据挖掘的包，并没有全部使用过，也会有遗漏，会不断更新。</p>
+
+<h3>聚类</h3>
+
+<ul>
+<li>包：fpc,cluster,pvclust,mclust</li>
+<li>基于分片的聚类：kmeans,pam,pamk,clara</li>
+<li>层次聚类：hclust,pvclust,agnes,diana</li>
+<li>基于密度的聚类：mclust</li>
+<li>绘制集群解决方案：plotcluster,plot,hclust</li>
+<li>验证集群解决方案：cluster.stats</li>
+</ul>
+
+<h3>分类</h3>
+
+<ul>
+<li>包：rpart,party,randomForest,rpartOrdinal,tree,marginTree,maptree,survival</li>
+<li>决策树：rpart,ctree</li>
+<li>随机森林：cforest,randomForest</li>
+<li>逻辑回归：logistic，</li>
+<li>泊松回归：glm,predict,residuals</li>
+<li>生存分析：survfit,survdiff,coxph</li>
+</ul>
+
+<h3>关联规则和频繁项集</h3>
+
+<ul>
+<li>包：arules,drm</li>
+<li>APRIORI算法：apriori,drm</li>
+<li>ECLAT算法：eclat</li>
+</ul>
+
+<h3>序列模型</h3>
+
+<ul>
+<li>包：arulesSequences</li>
+<li>SPADE算法：cSPADE</li>
+</ul>
+
+<h3>时序</h3>
+
+<ul>
+<li>包：timsac</li>
+<li>构造时序序列：ts</li>
+<li>分解：decomp,decompose,stl,tsr</li>
+</ul>
+
+<h3>统计</h3>
+
+<ul>
+<li>包：base R,nlme</li>
+<li>变量分析：aov,anova</li>
+<li>密度分析：density</li>
+<li>统计测试：t.test,prop.test,anova,aov</li>
+<li>线性混合效应模型拟合：lme</li>
+<li>主成分和因子分析：princomp</li>
+</ul>
+
+<h3>图形</h3>
+
+<ul>
+<li>bar图：barplot</li>
+<li>pie图：pie</li>
+<li>散点图：dotchart</li>
+<li>柱状图： hist</li>
+<li>密度图：densityplot</li>
+<li>箱线图：boxplot</li>
+<li>qq图：qqnorm,qqnplot,qqline</li>
+<li>双变量图：coplot</li>
+<li>树：rpart</li>
+<li>平行坐标：parallel,paracoor,parcoord</li>
+<li>热点、轮廓：contour，filled,contour</li>
+<li>其他图：stripplot,sunflowerplot,interaction.plot,matplot,fourfoldplot,assocplot,mosaicplot</li>
+<li>保存图形格式：pdf,postscript,win.metafile,jpeg,bmp,png</li>
+</ul>
+
+<h3>数据管理</h3>
+
+<ul>
+<li>缺失值：na.omit</li>
+<li>标准化变量：scale</li>
+<li>转换：t</li>
+<li>样例：sample</li>
+<li>栈：stack,unstack</li>
+<li>其他：aggregate,merge,reshape</li>
+</ul>
+
+<h2>3、数据集</h2>
+
+<h3>Iris数据集</h3>
+
+<p>str(iris)</p>
+
+<h3>mboost包中的bodyfat数据集</h3>
+
+<p>data(&ldquo;bodyfat&rdquo;,package=&ldquo;mboost&rdquo;)</p>
+
+</body>
+
+</html>
+

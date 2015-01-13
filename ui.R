@@ -135,10 +135,6 @@ shinyUI(navbarPage("R小站",
                           )
                   )
                 )
-            ),
-            tabPanel("NVD3 line chart output",h3("This is the first panel")
-            ),
-            tabPanel("Google Charts",h3("This is the first panel")
             ),widths = c(3, 9))
         ),
       #"Shiny例子"-"Start simple" ----
@@ -335,29 +331,16 @@ shinyUI(navbarPage("R小站",
              tabPanel("基础知识",
                       navlistPanel(
                         "header",
-                        tabPanel("Tab1",
-                                 h3("This is the first panel")
-                        ),
-                        "-----",
-                        tabPanel("Tab2",
-                                 h3("dfsdfad")
+                        tabPanel("总览",
+                            includeMarkdown("./markdown/datamining/index.md")
                         ),widths = c(3, 9))
              ),  
              #"数据挖掘"-"例子" ---- 
-             tabPanel("例子",
+             tabPanel("Clustering",
                       navlistPanel(
                         "header",
-                        tabPanel("练习",
-                                 plotOutput('plot'),
-                                 hr(),
-                                 fluidRow(
-                                   column(2,
-                                          "sidebar"
-                                   ),
-                                   column(10,
-                                          "main"
-                                   )
-                                 )
+                        tabPanel("kMeansCluster",
+                            includeMarkdown("./markdown/datamining/kMeansCluster.md")
                         ),
                         "-----",
                         tabPanel("ddd",

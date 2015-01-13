@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>基于iris数据显示k-means聚类方法</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+</head>
+
+<body>
+<h1>基于iris数据显示k-means聚类方法</h1>
+
+<p>将iris数据集赋给iris2变量</p>
+
+<pre><code class="r">iris2&lt;-iris
+head(iris2)
+</code></pre>
+
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa
+</code></pre>
+
+<p>从iris2数据集中删除species变量</p>
+
+<pre><code class="r">iris2$Species&lt;-NULL
+head(iris2)
+</code></pre>
+
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1          5.1         3.5          1.4         0.2
+## 2          4.9         3.0          1.4         0.2
+## 3          4.7         3.2          1.3         0.2
+## 4          4.6         3.1          1.5         0.2
+## 5          5.0         3.6          1.4         0.2
+## 6          5.4         3.9          1.7         0.4
+</code></pre>
+
+<p>对数据集iris2上应用kmeans()函数，并将聚类结果存储在result变量中，聚类数设置为3</p>
+
+<pre><code class="r">result&lt;-kmeans(iris2,3)
+result
+</code></pre>
+
+<pre><code>## K-means clustering with 3 clusters of sizes 50, 62, 38
+## 
+## Cluster means:
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1     5.006000    3.428000     1.462000    0.246000
+## 2     5.901613    2.748387     4.393548    1.433871
+## 3     6.850000    3.073684     5.742105    2.071053
+## 
+## Clustering vector:
+##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [36] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [71] 2 2 2 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 3 3 3
+## [106] 3 2 3 3 3 3 3 3 2 2 3 3 3 3 2 3 2 3 2 3 3 2 2 3 3 3 3 3 2 3 3 3 3 2 3
+## [141] 3 3 2 3 3 3 2 3 3 2
+## 
+## Within cluster sum of squares by cluster:
+## [1] 15.15100 39.82097 23.87947
+##  (between_SS / total_SS =  88.4 %)
+## 
+## Available components:
+## 
+## [1] &quot;cluster&quot;      &quot;centers&quot;      &quot;totss&quot;        &quot;withinss&quot;    
+## [5] &quot;tot.withinss&quot; &quot;betweenss&quot;    &quot;size&quot;         &quot;iter&quot;        
+## [9] &quot;ifault&quot;
+</code></pre>
+
+<p>比较聚类结果中各组Species的数目</p>
+
+<pre><code class="r">table(iris$Species,result$cluster)
+</code></pre>
+
+<pre><code>##             
+##               1  2  3
+##   setosa     50  0  0
+##   versicolor  0 48  2
+##   virginica   0 14 36
+</code></pre>
+
+<p>从结果中可以看出，聚类“setosa”能够很容易的与其他聚类分开，而聚类&quot;versicolor&quot;和“virginica”与其他有小程度的覆盖。</p>
+
+<p>下面绘制一下各个聚簇及他们的中心，数据中有4个维度，下面只绘制2个维度。在图形显示中一些黑点离绿色中心比离黑色中心更近。由于初始随机选择的聚类中心不同，k-均值聚类的结果每次运行都会不同。</p>
+
+<pre><code class="r">plot(iris2[c(&quot;Sepal.Length&quot;,&quot;Sepal.Width&quot;)],col=result$cluster)
+points(result$centers[,c(&quot;Sepal.Length&quot;,&quot;Sepal.Width&quot;)],col=1:3,pch=8,cex=2)
+</code></pre>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAGwCAMAAABy/YdMAAAAD1BMVEX9/v0AAAAAzQD9/v3/AABx0cPWAAAABXRSTlP///8A/0WQHKwAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAr3SURBVHic7Z2JdqM6EAWfQv7/m9/EGwIL0NJCy606Z2LHRoK4BlpqN/DfApL813oDoA2IFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIF6VEvIOeqSi+oC3UBvGiIF4UxIuCeFEQLwriRUG8KNriL/MY8yIt3i0jbGUdEN96IxqB+NYb0Qhp8cT4QyYXLwziRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRZERL1xlFURFvHJdZRDEi4J4UVTEE+N3yIiHLYgXBfGiIF4UxIuCeFGmEc90LY1ZxJOgSQTxoiBelFnEE+MTmUY8pIF4UcrFH97wAPE9Uyze7R6ju4amIF4UxItCjBeFUf0LtTwA4p/IZf7MxK8dRd7Sri8Qv4U9flYQ/2KwI1QxRuJD3Wh9kKNRPo8/jOiI7xmLefxBN4jvGYtD/T/1iB8NmxgfHBghvmcY1Ysyt3i1OVoCU4uXy8okgHhREC/K1OKJ8cfMLR4OQbwoiBcF8aIgXhTEi4J4UcYWXzpPn3Oe//Pzc/3i0OJLM3NzZvZ+Xv/OX0S80bb0A+Krt+8TAfHE+CDzx3jIB/GiIF4UxIuCeFEQLwriRRlbfHgevr465zzdhKHFhzNv66tzZuZsQLwoiBdlaPHE+HzGFg/ZIF4UxIuCeFEQLwriRelG/NXMy3tfZ5IWLKKyoRfxV7kW732dtEywbNIIxHcM4hFvTi/iifEhBGI83AziRSkW/4i43IVqOCzEu3BHiO8ZxItSLt4hfkQMBnePAE+MH4wRR/XB0qqEPAAsQ4oPFlMmZP7gDzPxa0e17zTpFof4Yobc4xFfTqT4nF2YGN8zceJP96W/Cd1tmTtv6ojIEorFu+XoOFpHzGddeC9iOPHvVCHey4gRfzpMd7vH6K6zcZ80MeRTPqo/DLgVB3d4LyblUN9+VO922K9BhuJDfXbX+6WDE4Ojs2Hd1/sJ7eP5/f0NvLoWRFUsjapN+XQut+vvhb8aHA0a3esuxlcJnNJB4O/r35a1BLJmMWRtesncxYtz7pO7Q3w+vRzqo8V9tDvElxCbsr1eNLXr/dJxMdqtrzpifAFjjeqr96wD4kVJ+XbOtusCEF9OL6N6uBnEixI1nVtuyNzBvbDHixKXwKnRdT79XLkyYR7f25Q/cjqX81VYve/j/fllS/MJmbvuknwJh/peYjziLYgVzx4fYHrxeaGUGJ+56C3ETedqdA1NGXGPBwMGjPFgwYCjerAg4ds5466hKZGlVxW6hqa0yNVfVUm1PvE1XHB1gTddu5q5BUu3givt5MqWRjH+qi7yKi1TO20TLrG8wEvQXOVqgsWawZVOdi1bxCM++CLiA52aEzm4My3EIMYPFuNtu4amIF6UlPJqMncTEX1CRfrFCBDfMwni+zmTZgoafz2P+FYMIf55Zqpt17qsk/iG9rsZ1ZdO7lsTP3n3nDesx+pFfGk6rzXx6Trvt5YVmCnTOduuvxfWEf+0/tO/eOf9tOr6e2Eh8U/tiF+0Yvzz94hGFYkf1ZPAseFnT5vNiNzjT76fO3wH8Se8Inw7ikf1bvcY3bU0z8Fdyy1AfAu86Vwr4qdzB4siPp01gdNuG8pz9cT4VAZK2Rp8SZM1Mws3im8fLqJaX014P6Eeax2pe42+SrOOnWddOTOh9OvBXeKzcjHhRvHtw2WT66sJ7ydUYK5WvUbfxZiHcrKulZtQ7PnELGW7vhuc+yF+TPE5IP5UfET7GcQT4wvLr+NXahjjH/cJP/q03a03HAQjYsS75eT4evwm4nsG8aKYiA93hPieKRZ//F094nsmcnDnFqps5+K26Rz0RQvxrauorubxoSXDT69Oc8464TqMdalOA/Hxmbc6XGXuQkuGn15d2CDrEgthzL/ERXzUkog36BrxGcwgnhifwwQxHnoA8aIgXhTEi4J4URAvCuJFURR/WVN3XogXbn81pQ93lUXqGdlBBMVfV9GGUjGhRcNVtAn5wCxSr8EQBvGbF9fXd24QH8+I4lfnv0eNEF/YdTtOY/xm1w82IsaXdd0rD+tm3610C+K/+Kd9fu+I9/nd0Xp7aoL4b+Y2/gLxX3CoXyTFM7j7YxzxCSH5tEpqm8mJn5g1vEhlFrOIT8iKnNZF/u5/iUzFNL6GVTqI37y4TdkivkbXtljt8Z9fYjpFfE7XxljF+Mfz2E6J8RldQ1MQLwriRUG8KIgXBfGiIF4UGfFXk/erKftA83RKrzyu0nVXSbqBMnMUW/ogfgfiT973QHw8XYknxu+QEQ9bisU/rmHF9eqHw0K8C3eE+J5BvCjl4h3iR8RgcPe8qHly19CUYUb1pVeOvDrb1W6jwvQ2HRxF/HWFZHT74PntdhsVprsEkJn4taPgnSZLQbwx7PHWGxUG8bkQ420pF/86pjOdGwujlC3iR8NE/N9PxI+FkfjQXekQ3zMGMf6oI8T3zDCjerAF8aIMI/7GKbcEo4i/McmmAeJFQbwoo4gnxhszjHiwBfGiIF4UxIuCeFEQL0pb8XkVmVkzsyrTuYHniE3Fu6il9mTlYqokcEbOCiG+AMTndL0gviXE+BKI8RldQ1MQLwriRUG8KIgXBfGiIF4UxJ8RnqcPPHtfQfwJ4czcyPm6FcSfgPgaXQ8A4mt0PQLE+ApdQ1MQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXxeR69dxpcjysrl7NRYwHA/GiIF4UYrwoI47qpyh9as2A4ucodmyNmfi1oyp3mvRAvAXs8aIMKJ4Yb4HJqD7cEaP6njGZx3OnyfEwSuBwp8nRsMrccafJwTCI8UcdIb5nRhzVgwGIFwXxotQUDz1TT3zUf477Wt3XaIbtQ3zfq0J8T41m2D7E970qxPfUaIbtQ3zfq0J8T41m2L7a4qFTEC8K4kVBvCiIFwXxoiBeFMSLgnhREC9KRfGfKypcVoN4bT7L5jaKbbUumbCmbavIZi7nj3JZf1TCX1VP/LoJKY38J9EfUuBZTBu3e5bSKi2J7rVJ28TENSX8VfXFZ3lP+YxyvOetKW9VS5n41M+vtfjPOVeZR/olXnzWkX7JWJPfKilAeI/xn8X7MeXzW3oSf7UJm0YZB+C8Ri7rUJ/VqlB8UqPo/861xLvNetMP92lHxfRjcHGMT2hVJj5lTR3s8dvKbm3xzn+SPpxIbNT6UJ81ornxUJ/TqKDVfY36EP/4lzxPTmx1X6PMVX1+1m6UsH1k7kRBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoqiIPzsfxXk/D5dIqRAfARHx7vPj6E3ET8lH/Lv++HUTxU81sne6y26Jx1O3rKfNzYGS+OVT6/86B+79m7/I1xJu8zANIuLfMd5TvYoOit8/JJ7T1T0q4v9wy/uUPu90ky/xmyUQPzjvGH+4W2/eCi2B+CHxxYci+HJiHPEj857HB8bsH8Gvg7w/GHgv4RA/BUkGZ9K9gvjzBVPOUR4KTfGAeFUQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF6U/wGzRuIm0jK2XQAAAABJRU5ErkJggg==" alt="plot of chunk unnamed-chunk-5"/> 
+绘制中心点</p>
+
+</body>
+
+</html>
+
