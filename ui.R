@@ -2,10 +2,9 @@ library(shiny)
 library(ggplot2)
 library(ggvis)
 library(datasets)
-
+require(markdown)
 dataset <- diamonds
 
-require(rmarkdown)
 # 定义带菜单栏的用户界面
 shinyUI(navbarPage("R小站",
   #菜单栏开始-----
@@ -333,7 +332,7 @@ shinyUI(navbarPage("R小站",
                       navlistPanel(
                         "header",
                         tabPanel("总览",
-                            includeMarkdown("./markdown/datamining/index.html")
+                             includeHTML("./markdown/datamining/index.html")
                         ),widths = c(3, 9))
              ),  
              #"数据挖掘"-"例子" ---- 
@@ -341,7 +340,7 @@ shinyUI(navbarPage("R小站",
                       navlistPanel(
                         "header",
                         tabPanel("kMeansCluster",
-                            includeMarkdown("./markdown/datamining/cluster/kMeansCluster.html")
+                             includeHTML("./markdown/datamining/cluster/kMeansCluster.html")
                         ),
                         tabPanel("ddd",
                                  h3("This is the first panel")
@@ -351,7 +350,7 @@ shinyUI(navbarPage("R小站",
                       navlistPanel(
                         "header",
                         tabPanel("LinerRegression",
-                            includeMarkdown("./markdown//datamining/regression/linerRegression.md")
+                             includeHTML("./markdown//datamining/regression/linerRegression.html")
                           ),widths=c(3,9))
              
               )
