@@ -1,0 +1,32 @@
+基于iris数据显示k-means聚类方法
+========================================================
+将iris数据集赋给iris2变量
+```{r}
+iris2<-iris
+head(iris2)
+```
+
+从iris2数据集中删除species变量
+```{r}
+iris2$Species<-NULL
+head(iris2)
+```
+
+对数据集iris2上应用kmeans()函数,并将聚类结果存储在result变量中，聚类数设置为3.
+```{r}
+result<-kmeans(iris2,3)
+result
+```
+
+比较聚类结果各组种类数量
+```{r}
+table(iris$Species,result$cluster)
+```
+
+From the above result,we can see that cluster "setosa" can be easily separated from other clusters,and that clusters "versicoloer" and "virginica" are to a small degree overlapped with each other.Plot the clusters and their points.There are four dimensions in the data and that only the first two dimensions are used to draw the plot here.
+```{r fig.width=7, fig.height=6}
+plot(iris2[c("Sepal.Length","Sepal.Width")],col=result$cluster)
+points(result$centers[,c("Sepal.Length","Sepal.Width")],col=1:3,pch=8,cex=2)
+```
+
+

@@ -211,29 +211,29 @@ head(iris2)
 ## 6          5.4         3.9          1.7         0.4
 </code></pre>
 
-<p>对数据集iris2上应用kmeans()函数，并将聚类结果存储在result变量中，聚类数设置为3</p>
+<p>对数据集iris2上应用kmeans()函数,并将聚类结果存储在result变量中，聚类数设置为3.</p>
 
 <pre><code class="r">result&lt;-kmeans(iris2,3)
 result
 </code></pre>
 
-<pre><code>## K-means clustering with 3 clusters of sizes 50, 62, 38
+<pre><code>## K-means clustering with 3 clusters of sizes 38, 50, 62
 ## 
 ## Cluster means:
 ##   Sepal.Length Sepal.Width Petal.Length Petal.Width
-## 1     5.006000    3.428000     1.462000    0.246000
-## 2     5.901613    2.748387     4.393548    1.433871
-## 3     6.850000    3.073684     5.742105    2.071053
+## 1     6.850000    3.073684     5.742105    2.071053
+## 2     5.006000    3.428000     1.462000    0.246000
+## 3     5.901613    2.748387     4.393548    1.433871
 ## 
 ## Clustering vector:
-##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [36] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-##  [71] 2 2 2 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 3 3 3
-## [106] 3 2 3 3 3 3 3 3 2 2 3 3 3 3 2 3 2 3 2 3 3 2 2 3 3 3 3 3 2 3 3 3 3 2 3
-## [141] 3 3 2 3 3 3 2 3 3 2
+##   [1] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [36] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+##  [71] 3 3 3 3 3 3 3 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 1 3 1 1 1
+## [106] 1 3 1 1 1 1 1 1 3 3 1 1 1 1 3 1 3 1 3 1 1 3 3 1 1 1 1 1 3 1 1 1 1 3 1
+## [141] 1 1 3 1 1 1 3 1 1 3
 ## 
 ## Within cluster sum of squares by cluster:
-## [1] 15.15100 39.82097 23.87947
+## [1] 23.87947 15.15100 39.82097
 ##  (between_SS / total_SS =  88.4 %)
 ## 
 ## Available components:
@@ -243,28 +243,25 @@ result
 ## [9] &quot;ifault&quot;
 </code></pre>
 
-<p>比较聚类结果中各组Species的数目</p>
+<p>比较聚类结果各组种类数量</p>
 
 <pre><code class="r">table(iris$Species,result$cluster)
 </code></pre>
 
 <pre><code>##             
 ##               1  2  3
-##   setosa     50  0  0
-##   versicolor  0 48  2
-##   virginica   0 14 36
+##   setosa      0 50  0
+##   versicolor  2  0 48
+##   virginica  36  0 14
 </code></pre>
 
-<p>从结果中可以看出，聚类“setosa”能够很容易的与其他聚类分开，而聚类&quot;versicolor&quot;和“virginica”与其他有小程度的覆盖。</p>
-
-<p>下面绘制一下各个聚簇及他们的中心，数据中有4个维度，下面只绘制2个维度。在图形显示中一些黑点离绿色中心比离黑色中心更近。由于初始随机选择的聚类中心不同，k-均值聚类的结果每次运行都会不同。</p>
+<p>From the above result,we can see that cluster &ldquo;setosa&rdquo; can be easily separated from other clusters,and that clusters &ldquo;versicoloer&rdquo; and &ldquo;virginica&rdquo; are to a small degree overlapped with each other.Plot the clusters and their points.There are four dimensions in the data and that only the first two dimensions are used to draw the plot here.</p>
 
 <pre><code class="r">plot(iris2[c(&quot;Sepal.Length&quot;,&quot;Sepal.Width&quot;)],col=result$cluster)
 points(result$centers[,c(&quot;Sepal.Length&quot;,&quot;Sepal.Width&quot;)],col=1:3,pch=8,cex=2)
 </code></pre>
 
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAGwCAMAAABy/YdMAAAAD1BMVEX9/v0AAAAAzQD9/v3/AABx0cPWAAAABXRSTlP///8A/0WQHKwAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAr3SURBVHic7Z2JdqM6EAWfQv7/m9/EGwIL0NJCy606Z2LHRoK4BlpqN/DfApL813oDoA2IFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIF6VEvIOeqSi+oC3UBvGiIF4UxIuCeFEQLwriRUG8KNriL/MY8yIt3i0jbGUdEN96IxqB+NYb0Qhp8cT4QyYXLwziRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRZERL1xlFURFvHJdZRDEi4J4UVTEE+N3yIiHLYgXBfGiIF4UxIuCeFGmEc90LY1ZxJOgSQTxoiBelFnEE+MTmUY8pIF4UcrFH97wAPE9Uyze7R6ju4amIF4UxItCjBeFUf0LtTwA4p/IZf7MxK8dRd7Sri8Qv4U9flYQ/2KwI1QxRuJD3Wh9kKNRPo8/jOiI7xmLefxBN4jvGYtD/T/1iB8NmxgfHBghvmcY1Ysyt3i1OVoCU4uXy8okgHhREC/K1OKJ8cfMLR4OQbwoiBcF8aIgXhTEi4J4UcYWXzpPn3Oe//Pzc/3i0OJLM3NzZvZ+Xv/OX0S80bb0A+Krt+8TAfHE+CDzx3jIB/GiIF4UxIuCeFEQLwriRRlbfHgevr465zzdhKHFhzNv66tzZuZsQLwoiBdlaPHE+HzGFg/ZIF4UxIuCeFEQLwriRelG/NXMy3tfZ5IWLKKyoRfxV7kW732dtEywbNIIxHcM4hFvTi/iifEhBGI83AziRSkW/4i43IVqOCzEu3BHiO8ZxItSLt4hfkQMBnePAE+MH4wRR/XB0qqEPAAsQ4oPFlMmZP7gDzPxa0e17zTpFof4Yobc4xFfTqT4nF2YGN8zceJP96W/Cd1tmTtv6ojIEorFu+XoOFpHzGddeC9iOPHvVCHey4gRfzpMd7vH6K6zcZ80MeRTPqo/DLgVB3d4LyblUN9+VO922K9BhuJDfXbX+6WDE4Ojs2Hd1/sJ7eP5/f0NvLoWRFUsjapN+XQut+vvhb8aHA0a3esuxlcJnNJB4O/r35a1BLJmMWRtesncxYtz7pO7Q3w+vRzqo8V9tDvElxCbsr1eNLXr/dJxMdqtrzpifAFjjeqr96wD4kVJ+XbOtusCEF9OL6N6uBnEixI1nVtuyNzBvbDHixKXwKnRdT79XLkyYR7f25Q/cjqX81VYve/j/fllS/MJmbvuknwJh/peYjziLYgVzx4fYHrxeaGUGJ+56C3ETedqdA1NGXGPBwMGjPFgwYCjerAg4ds5466hKZGlVxW6hqa0yNVfVUm1PvE1XHB1gTddu5q5BUu3givt5MqWRjH+qi7yKi1TO20TLrG8wEvQXOVqgsWawZVOdi1bxCM++CLiA52aEzm4My3EIMYPFuNtu4amIF6UlPJqMncTEX1CRfrFCBDfMwni+zmTZgoafz2P+FYMIf55Zqpt17qsk/iG9rsZ1ZdO7lsTP3n3nDesx+pFfGk6rzXx6Trvt5YVmCnTOduuvxfWEf+0/tO/eOf9tOr6e2Eh8U/tiF+0Yvzz94hGFYkf1ZPAseFnT5vNiNzjT76fO3wH8Se8Inw7ikf1bvcY3bU0z8Fdyy1AfAu86Vwr4qdzB4siPp01gdNuG8pz9cT4VAZK2Rp8SZM1Mws3im8fLqJaX014P6Eeax2pe42+SrOOnWddOTOh9OvBXeKzcjHhRvHtw2WT66sJ7ydUYK5WvUbfxZiHcrKulZtQ7PnELGW7vhuc+yF+TPE5IP5UfET7GcQT4wvLr+NXahjjH/cJP/q03a03HAQjYsS75eT4evwm4nsG8aKYiA93hPieKRZ//F094nsmcnDnFqps5+K26Rz0RQvxrauorubxoSXDT69Oc8464TqMdalOA/Hxmbc6XGXuQkuGn15d2CDrEgthzL/ERXzUkog36BrxGcwgnhifwwQxHnoA8aIgXhTEi4J4URAvCuJFURR/WVN3XogXbn81pQ93lUXqGdlBBMVfV9GGUjGhRcNVtAn5wCxSr8EQBvGbF9fXd24QH8+I4lfnv0eNEF/YdTtOY/xm1w82IsaXdd0rD+tm3610C+K/+Kd9fu+I9/nd0Xp7aoL4b+Y2/gLxX3CoXyTFM7j7YxzxCSH5tEpqm8mJn5g1vEhlFrOIT8iKnNZF/u5/iUzFNL6GVTqI37y4TdkivkbXtljt8Z9fYjpFfE7XxljF+Mfz2E6J8RldQ1MQLwriRUG8KIgXBfGiIF4UGfFXk/erKftA83RKrzyu0nVXSbqBMnMUW/ogfgfiT973QHw8XYknxu+QEQ9bisU/rmHF9eqHw0K8C3eE+J5BvCjl4h3iR8RgcPe8qHly19CUYUb1pVeOvDrb1W6jwvQ2HRxF/HWFZHT74PntdhsVprsEkJn4taPgnSZLQbwx7PHWGxUG8bkQ420pF/86pjOdGwujlC3iR8NE/N9PxI+FkfjQXekQ3zMGMf6oI8T3zDCjerAF8aIMI/7GKbcEo4i/McmmAeJFQbwoo4gnxhszjHiwBfGiIF4UxIuCeFEQL0pb8XkVmVkzsyrTuYHniE3Fu6il9mTlYqokcEbOCiG+AMTndL0gviXE+BKI8RldQ1MQLwriRUG8KIgXBfGiIF4UxJ8RnqcPPHtfQfwJ4czcyPm6FcSfgPgaXQ8A4mt0PQLE+ApdQ1MQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXxeR69dxpcjysrl7NRYwHA/GiIF4UYrwoI47qpyh9as2A4ucodmyNmfi1oyp3mvRAvAXs8aIMKJ4Yb4HJqD7cEaP6njGZx3OnyfEwSuBwp8nRsMrccafJwTCI8UcdIb5nRhzVgwGIFwXxotQUDz1TT3zUf477Wt3XaIbtQ3zfq0J8T41m2D7E970qxPfUaIbtQ3zfq0J8T41m2L7a4qFTEC8K4kVBvCiIFwXxoiBeFMSLgnhREC9KRfGfKypcVoN4bT7L5jaKbbUumbCmbavIZi7nj3JZf1TCX1VP/LoJKY38J9EfUuBZTBu3e5bSKi2J7rVJ28TENSX8VfXFZ3lP+YxyvOetKW9VS5n41M+vtfjPOVeZR/olXnzWkX7JWJPfKilAeI/xn8X7MeXzW3oSf7UJm0YZB+C8Ri7rUJ/VqlB8UqPo/861xLvNetMP92lHxfRjcHGMT2hVJj5lTR3s8dvKbm3xzn+SPpxIbNT6UJ81ornxUJ/TqKDVfY36EP/4lzxPTmx1X6PMVX1+1m6UsH1k7kRBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoqiIPzsfxXk/D5dIqRAfARHx7vPj6E3ET8lH/Lv++HUTxU81sne6y26Jx1O3rKfNzYGS+OVT6/86B+79m7/I1xJu8zANIuLfMd5TvYoOit8/JJ7T1T0q4v9wy/uUPu90ky/xmyUQPzjvGH+4W2/eCi2B+CHxxYci+HJiHPEj857HB8bsH8Gvg7w/GHgv4RA/BUkGZ9K9gvjzBVPOUR4KTfGAeFUQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF6U/wGzRuIm0jK2XQAAAABJRU5ErkJggg==" alt="plot of chunk unnamed-chunk-5"/> 
-绘制中心点</p>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-5"/> </p>
 
 </body>
 

@@ -1,0 +1,82 @@
+通过回归模型预测CPI数据案例
+========================================================
+
+回归分析是建立自变量(预测变量)和因变量(响应变量)的函数关系式。通过自变量的变化来预测因变量的结果。如果自变量只有一个变量称为单变量线性回归，如果自变量有多个称为多变量线性回归。函数关系式如下:
+    
+       y=c0+c1x1+c2x2+...+ckxk
+
+其中x1,x2,...,xk为自变量，y是因变量
+
+下面使用lm函数实现回归预测
+------------------------------
+init CPI,year,quarter data
+```{r}
+cpi<-c(162.2,164.6,166.5,166.0,166.2,167.0,168.6,169.5,171.0,172.1,173.3,174.0)
+year<-rep(2008:2010,each=4)
+quarter<-rep(1:4,3)
+```
+
+Draw CPI Plot and axis.The param **"xaxt"** in plot function specifies the x axis type.Specifying "n" suppresses plotting of the axis.The first param in axis function specifies which side of the plot the axis is to be drawn on.The param **"at"** specifies the points at which tick-marks are to be drawn.The param **"las"** specifies the style of axis labels.3=always vertical
+
+```{r fig.width=7, fig.height=6}
+plot(cpi,xaxt="n",ylab="CPI",xlab="")
+axis(1,paste(year,quarter,sep="Q"),at=1:12,las=3)
+```
+
+Then check the correlation between CPI and the other variables:**year** and **quarter**.
+```{r}
+cor(year,cpi)
+cor(quarter,cpi)
+```
+
+Then we can built a linear regression on the data,using **year** and **quarter** as predictors and **CPI** as response.
+
+```{r}
+fit<-lm(cpi~year+quarter)
+fit
+```
+With the above liner model,the formula for CPI is :
+
+   __cpi=c0 + c1\*year + c2\*quarter__
+ 
+where c0,c1 and c2 are coefficients from model **fit**. Therefore,the CPI in 2011 can be get as follows:
+```{r}
+fitcoeff<-fit$coefficients
+cpi2011<-fitcoeff[[1]]+fitcoeff[[2]]*2011+fitcoeff[[3]]*(1:4)
+cpi2011
+```
+   
+Look the details of the model:
+```{r}
+attributes(fit)
+```
+
+Look the differences between observed values and fited values:
+```{r}
+residuals(fit)
+```
+
+Look the summary of the model:
+```{r}
+summary(fit)
+```
+
+draw plots of the model:
+```{r fig.width=7, fig.height=6}
+plot(fit)
+```
+下面使用predict预测2011年CPI
+-------------------------------------------
+
+Create a **data.frame** for 2011.Then Make a prediction for newdata base on above **fit** model.
+```{r}
+data2011<-data.frame(year=2011,quarter=1:4)
+cpi2011<-predict(fit,newdata=data2011)
+style<-c(rep(1,12),rep(2,4))
+```
+
+Draw the predict plot.
+```{r fig.width=7, fig.height=6}
+plot(c(cpi,cpi2011),xaxt="n",ylab="CPI",xlab="",pch=style,col=style)
+axis(1,at=1:16,las=3,labels=c(paste(year,quarter,sep="Q"),"2011Q1","2011Q2","2011Q3","2011Q4"))
+```

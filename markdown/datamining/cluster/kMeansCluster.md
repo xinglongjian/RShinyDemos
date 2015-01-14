@@ -1,6 +1,5 @@
 基于iris数据显示k-means聚类方法
 ========================================================
-
 将iris数据集赋给iris2变量
 
 ```r
@@ -35,7 +34,7 @@ head(iris2)
 ## 6          5.4         3.9          1.7         0.4
 ```
 
-对数据集iris2上应用kmeans()函数，并将聚类结果存储在result变量中，聚类数设置为3
+对数据集iris2上应用kmeans()函数,并将聚类结果存储在result变量中，聚类数设置为3.
 
 ```r
 result<-kmeans(iris2,3)
@@ -43,23 +42,23 @@ result
 ```
 
 ```
-## K-means clustering with 3 clusters of sizes 50, 62, 38
+## K-means clustering with 3 clusters of sizes 38, 50, 62
 ## 
 ## Cluster means:
 ##   Sepal.Length Sepal.Width Petal.Length Petal.Width
-## 1     5.006000    3.428000     1.462000    0.246000
-## 2     5.901613    2.748387     4.393548    1.433871
-## 3     6.850000    3.073684     5.742105    2.071053
+## 1     6.850000    3.073684     5.742105    2.071053
+## 2     5.006000    3.428000     1.462000    0.246000
+## 3     5.901613    2.748387     4.393548    1.433871
 ## 
 ## Clustering vector:
-##   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [36] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-##  [71] 2 2 2 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 3 3 3
-## [106] 3 2 3 3 3 3 3 3 2 2 3 3 3 3 2 3 2 3 2 3 3 2 2 3 3 3 3 3 2 3 3 3 3 2 3
-## [141] 3 3 2 3 3 3 2 3 3 2
+##   [1] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+##  [36] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+##  [71] 3 3 3 3 3 3 3 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 1 3 1 1 1
+## [106] 1 3 1 1 1 1 1 1 3 3 1 1 1 1 3 1 3 1 3 1 1 3 3 1 1 1 1 1 3 1 1 1 1 3 1
+## [141] 1 1 3 1 1 1 3 1 1 3
 ## 
 ## Within cluster sum of squares by cluster:
-## [1] 15.15100 39.82097 23.87947
+## [1] 23.87947 15.15100 39.82097
 ##  (between_SS / total_SS =  88.4 %)
 ## 
 ## Available components:
@@ -69,7 +68,7 @@ result
 ## [9] "ifault"
 ```
 
-比较聚类结果中各组Species的数目
+比较聚类结果各组种类数量
 
 ```r
 table(iris$Species,result$cluster)
@@ -78,14 +77,12 @@ table(iris$Species,result$cluster)
 ```
 ##             
 ##               1  2  3
-##   setosa     50  0  0
-##   versicolor  0 48  2
-##   virginica   0 14 36
+##   setosa      0 50  0
+##   versicolor  2  0 48
+##   virginica  36  0 14
 ```
 
-从结果中可以看出，聚类“setosa”能够很容易的与其他聚类分开，而聚类"versicolor"和“virginica”与其他有小程度的覆盖。
-
-下面绘制一下各个聚簇及他们的中心，数据中有4个维度，下面只绘制2个维度。在图形显示中一些黑点离绿色中心比离黑色中心更近。由于初始随机选择的聚类中心不同，k-均值聚类的结果每次运行都会不同。
+From the above result,we can see that cluster "setosa" can be easily separated from other clusters,and that clusters "versicoloer" and "virginica" are to a small degree overlapped with each other.Plot the clusters and their points.There are four dimensions in the data and that only the first two dimensions are used to draw the plot here.
 
 ```r
 plot(iris2[c("Sepal.Length","Sepal.Width")],col=result$cluster)
@@ -93,6 +90,5 @@ points(result$centers[,c("Sepal.Length","Sepal.Width")],col=1:3,pch=8,cex=2)
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
-绘制中心点
 
 
