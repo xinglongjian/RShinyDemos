@@ -2,7 +2,7 @@ library(shiny)
 library(ggplot2)
 library(ggvis)
 library(datasets)
-require(markdown)
+library(rmarkdown)
 dataset <- diamonds
 
 # 定义带菜单栏的用户界面
